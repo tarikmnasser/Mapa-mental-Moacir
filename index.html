@@ -22,6 +22,23 @@
     -webkit-tap-highlight-color: transparent;
   }
   .wrap{max-width:760px; margin:0 auto; padding:18px 14px 46px;}
+  @media (min-width:900px){
+    .wrap{max-width:94vw;}
+    #mapaView{height:82vh; min-height:680px;}
+    .resumo-section{padding:24px 28px;}
+    .list-row{padding:13px 18px;}
+    .list-row .name{font-size:15.5px;}
+    .resumo-row .label{width:220px; font-size:15px;}
+    .resumo-row .pct{font-size:14px;}
+    .header-pct b{font-size:40px;}
+  }
+  @media (min-width:1300px){
+    .wrap{max-width:94vw;}
+    #mapaView{height:85vh; min-height:760px;}
+  }
+  @media (min-width:1800px){
+    .wrap{max-width:1900px;}
+  }
   .brand{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
   .brand .logo{
     width:44px; height:34px; border-radius:6px; background:#fff;
@@ -41,11 +58,11 @@
   .header-pct{display:flex; align-items:baseline; gap:12px; margin-top:4px;}
   .header-pct b{font-size:34px; font-weight:700; line-height:1;}
   .header-pct span{font-size:13px; opacity:.9;}
-  .view-toggle{display:flex; gap:4px; background:rgba(255,255,255,.15); border-radius:20px; padding:3px; flex-shrink:0;}
+  .view-toggle{display:flex; gap:3px; background:rgba(255,255,255,.15); border-radius:20px; padding:3px; flex-shrink:0; flex-wrap:wrap; justify-content:flex-end;}
   .view-toggle button{
-    display:flex; align-items:center; gap:5px; padding:6px 12px; border-radius:16px; border:none;
-    cursor:pointer; font-size:12px; font-weight:700; background:transparent; color:#fff;
-    font-family:Georgia,serif;
+    display:flex; align-items:center; gap:4px; padding:6px 10px; border-radius:16px; border:none;
+    cursor:pointer; font-size:11.5px; font-weight:700; background:transparent; color:#fff;
+    font-family:Georgia,serif; white-space:nowrap;
   }
   .view-toggle button.active{background:#fff; color:var(--azul-escuro);}
   .header-bar{width:100%; height:7px; background:rgba(255,255,255,.22); border-radius:4px; margin-top:12px; overflow:hidden;}
@@ -54,8 +71,14 @@
   #mapaView{
     position:relative; width:100%; height:64vh; min-height:440px; overflow:hidden;
     touch-action:none; background:#F3F6F8; border-radius:14px; border:1px solid var(--card-border);
+    user-select:none; -webkit-user-select:none; -moz-user-select:none;
+    -webkit-touch-callout:none;
   }
   #mapaView svg{display:block; width:100%; height:100%;}
+  #sheet, #sheet *{
+    user-select:text; -webkit-user-select:text; -moz-user-select:text;
+    -webkit-touch-callout:default;
+  }
   .node-circle{cursor:pointer;}
   .node-label{font-family:Georgia,serif; cursor:pointer; paint-order:stroke fill;}
   .edge-path{fill:none; stroke-linecap:round; opacity:.5;}
@@ -69,8 +92,12 @@
 
   #sheet{
     position:absolute; left:0; right:0; bottom:0; background:#FBF9F2; border-top:1px solid #E1DBC8;
-    border-radius:16px 16px 0 0; box-shadow:0 -6px 20px rgba(0,52,117,.18); padding:14px 16px 18px;
-    z-index:20; display:none;
+    border-radius:16px 16px 0 0; box-shadow:0 -6px 20px rgba(0,52,117,.18); padding:12px 14px 14px;
+    z-index:20; display:none; max-height:60%; overflow-y:auto;
+  }
+  .sheet-more-toggle{
+    background:none; border:none; color:var(--azul); font-size:12px; font-weight:700; cursor:pointer;
+    padding:2px 0; margin-bottom:6px;
   }
   #sheet.open{display:block;}
   .sheet-head{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;}
@@ -89,6 +116,17 @@
 
   #listaView{display:none;}
   .list-node{margin-bottom:6px;}
+  .branch-card{
+    border:1.5px solid; border-radius:14px; padding:8px 12px 8px; margin-bottom:14px;
+  }
+  .branch-card .list-row{
+    background:transparent; border:none; border-radius:0;
+    border-bottom:1px solid rgba(0,0,0,0.07);
+    padding:10px 4px;
+  }
+  .branch-card .children .list-row{ padding-left:0; }
+  .branch-card .list-node{margin-bottom:0;}
+  .branch-card .children{border-left:1.5px dashed; margin-left:14px; padding-left:10px;}
   .list-row{
     display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:10px;
     background:#fff; border:1px solid #E4E8EC;
@@ -116,6 +154,61 @@
 
   .footer-row{margin-top:16px; display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--texto-fraco);}
   .footer-credit{margin-top:18px; text-align:center; font-size:11px; color:#A6B2BC; letter-spacing:.5px;}
+
+  .search-row{display:flex; gap:8px; margin-bottom:12px;}
+  #searchResults{
+    display:none; position:absolute; left:0; right:44px; top:calc(100% + 4px);
+    background:#fff; border:1px solid var(--card-border); border-radius:10px;
+    box-shadow:0 6px 18px rgba(0,52,117,.12); z-index:30; max-height:260px; overflow-y:auto;
+  }
+  #searchResults.open{display:block;}
+  .search-result-item{
+    padding:9px 12px; cursor:pointer; font-size:13.5px; border-bottom:1px solid #F0EEE4;
+  }
+  .search-result-item:last-child{border-bottom:none;}
+  .search-result-item:hover, .search-result-item.active{background:#EAF1F7;}
+  .search-result-path{color:var(--texto-fraco); font-size:12px;}
+  .search-row input{
+    flex:1; padding:9px 12px; border-radius:10px; border:1px solid var(--card-border);
+    font-size:14px; font-family:inherit; background:#fff;
+  }
+  .search-row button{
+    width:36px; border-radius:10px; border:1px solid var(--card-border); background:#fff;
+    color:var(--texto-fraco); cursor:pointer; font-size:13px;
+  }
+
+  .overdue-badge{fill:#a63b2e; font-weight:700;}
+  .due-tag{font-size:11px; font-family:'Courier New',monospace;}
+  .due-tag.overdue{color:#a63b2e; font-weight:700;}
+  .due-tag.ok{color:#7A8894;}
+  .date-row{display:none; gap:6px; margin:6px 0 8px 28px; align-items:center;}
+  .date-row.open{display:flex;}
+  .date-row input{padding:6px 8px; border-radius:7px; border:1px solid #CFC9B4; font-size:13px;}
+  .date-row button{padding:6px 10px; border-radius:7px; border:none; background:var(--azul-escuro); color:#fff; font-size:12.5px; font-weight:700; cursor:pointer;}
+  .date-row .clear-date{background:#F3E3DF; color:#8A2A1A;}
+
+  #resumoView{display:none;}
+  .resumo-section{background:#fff; border:1px solid var(--card-border); border-radius:12px; padding:16px; margin-bottom:14px;}
+  .resumo-heading{font-weight:700; font-size:15px; margin-bottom:10px; color:var(--texto);}
+  .resumo-sub{font-size:12px; color:var(--texto-fraco); margin-bottom:10px; line-height:1.4;}
+  .resumo-row{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+  .resumo-row .label{width:140px; font-size:13px; flex-shrink:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .resumo-row .track{flex:1; height:14px; border-radius:7px; background:#EAEDF0; overflow:hidden;}
+  .resumo-row .track > div{height:100%; border-radius:7px; transition:width .3s ease;}
+  .resumo-row .pct{width:40px; text-align:right; font-size:12.5px; font-family:'Courier New',monospace; font-weight:700; flex-shrink:0;}
+  #snapshotBtn, #exportBtn, #importBtn{
+    padding:9px 14px; border-radius:8px; border:none; background:var(--azul-escuro); color:#fff;
+    font-size:13px; font-weight:700; cursor:pointer; margin-bottom:12px;
+  }
+  .history-item{display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #EEE;}
+  .history-item:last-child{border-bottom:none;}
+  .history-date{font-size:13px; color:var(--texto);}
+  .history-pct{font-size:13px; font-family:'Courier New',monospace; font-weight:700;}
+  .history-empty{font-size:13px; color:var(--texto-fraco); font-style:italic;}
+  #ajudaView{display:none;}
+  .help-list{margin:0; padding-left:18px; font-size:13.5px; line-height:1.6; color:var(--texto);}
+  .help-list li{margin-bottom:8px;}
+  .help-list li:last-child{margin-bottom:0;}
 </style>
 </head>
 <body>
@@ -145,9 +238,17 @@
       <div class="view-toggle">
         <button id="btnMapa" class="active">Mapa</button>
         <button id="btnLista">Lista</button>
+        <button id="btnResumo">Resumo</button>
+        <button id="btnAjuda">Ajuda</button>
       </div>
     </div>
     <div class="header-bar"><div id="overallBar" style="width:0%"></div></div>
+  </div>
+
+  <div class="search-row" style="position:relative;">
+    <input id="searchInput" type="text" placeholder="Buscar vertente ou pessoa..." autocomplete="off" />
+    <button id="searchClear" title="Limpar busca">✕</button>
+    <div id="searchResults"></div>
   </div>
 
   <div id="mapaView">
@@ -168,6 +269,18 @@
         <button class="sheet-close" id="sheetClose">✕</button>
       </div>
       <div class="sheet-actions" id="sheetActions"></div>
+      <button id="sheetMoreToggle" class="sheet-more-toggle">Mais opções ▾</button>
+      <div id="sheetExtra" style="display:none;">
+        <div class="date-row open" id="sheetRenameRow" style="margin:8px 0;">
+          <input id="sheetRenameInput" type="text" style="flex:1;" />
+          <button id="sheetRenameSave">✏️ Renomear</button>
+        </div>
+        <div class="date-row open" id="sheetDueRow" style="margin:0 0 8px 0;">
+          <input id="sheetDueInput" type="date" />
+          <button id="sheetDueSave">Salvar prazo</button>
+          <button id="sheetDueClear" class="clear-date">Remover</button>
+        </div>
+      </div>
       <div class="add-row">
         <input id="sheetAddInput" placeholder="Nova sub-vertente..." />
         <button id="sheetAddBtn" style="background:var(--azul-escuro); color:#fff;">+ Adicionar</button>
@@ -176,6 +289,61 @@
   </div>
 
   <div id="listaView"></div>
+
+  <div id="resumoView">
+    <div class="resumo-section">
+      <div class="resumo-heading">Conclusão por vertente</div>
+      <div id="resumoBars"></div>
+    </div>
+    <div class="resumo-section">
+      <div class="resumo-heading">Histórico semanal</div>
+      <div class="resumo-sub">Um retrato é salvo automaticamente sempre que o painel é aberto e já se passou uma semana desde o último. Também dá pra forçar manualmente.</div>
+      <button id="snapshotBtn">📸 Salvar retrato agora</button>
+      <div id="historyList"></div>
+    </div>
+    <div class="resumo-section">
+      <div class="resumo-heading">Backup dos dados</div>
+      <div class="resumo-sub">Os dados ficam só neste navegador/aparelho. Baixe um arquivo de backup de vez em quando (ex: toda sexta) e guarde no Drive/e-mail — se o navegador for limpo, você restaura a partir dele em qualquer aparelho.</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button id="exportBtn">⬇️ Baixar backup (.json)</button>
+        <button id="importBtn">⬆️ Restaurar backup</button>
+        <input id="importFile" type="file" accept="application/json" style="display:none;" />
+      </div>
+      <div id="backupMsg" style="font-size:12.5px; margin-top:8px;"></div>
+    </div>
+  </div>
+
+  <div id="ajudaView">
+    <div class="resumo-section">
+      <div class="resumo-heading">⚠️ O mais importante</div>
+      <ul class="help-list">
+        <li><strong>Use sempre o mesmo navegador e o mesmo aparelho.</strong> Os dados (tarefas concluídas, prazos, o que está aberto) ficam salvos só ali — abrir em outro navegador ou celular mostra tudo zerado.</li>
+        <li><strong>Não limpe o cache/dados de navegação do navegador</strong> (nem "restaure o iPhone/Android de fábrica") sem antes baixar um backup — isso apaga tudo que está salvo aqui.</li>
+        <li><strong>Baixe um backup com frequência</strong> (aba Resumo → "Baixar backup"). O ideal é toda sexta, ou sempre depois de uma atualização grande. Guarde o arquivo no Drive, e-mail ou WhatsApp "mensagens para mim".</li>
+        <li>Este painel <strong>não sincroniza</strong> entre pessoas. Se você e outra pessoa abrirem o mesmo link, cada um tem sua própria cópia local — marcar algo no seu aparelho não aparece no do outro.</li>
+      </ul>
+    </div>
+    <div class="resumo-section">
+      <div class="resumo-heading">Como usar — Mapa</div>
+      <ul class="help-list">
+        <li>Toque num nó para abrir/fechar os ramos dele e ver as ações (marcar concluído, renomear, prazo, adicionar, remover).</li>
+        <li>Arraste para mover o mapa; use os botões +/– ou pinça/scroll para dar zoom.</li>
+        <li>Um "+" do lado do número indica que aquele ramo tem itens escondidos — toque para abrir.</li>
+      </ul>
+    </div>
+    <div class="resumo-section">
+      <div class="resumo-heading">Como usar — Lista e Busca</div>
+      <ul class="help-list">
+        <li>Na Lista, o quadrado marca como concluído; a seta ▶ expande/recolhe.</li>
+        <li>A busca (no topo) mostra sugestões conforme você digita — clique numa sugestão, ou aperte Enter para ir direto no primeiro resultado.</li>
+        <li>O ✕ de remover sempre pede confirmação antes de excluir de verdade.</li>
+      </ul>
+    </div>
+    <div class="resumo-section">
+      <div class="resumo-heading">Dúvidas ou ajustes</div>
+      <div class="resumo-sub" style="margin-bottom:0;">Qualquer mudança no painel (novo campo, cor, estrutura) é feita direto no arquivo — fale com o Tarik.</div>
+    </div>
+  </div>
 
   <div class="footer-row">
     <span id="footerHint">Toque num nó · arraste para mover · pinça/scroll para zoom</span>
@@ -236,26 +404,109 @@ function makeNode(name, extra){
   return Object.assign({ id:"n"+idCounter+"_"+Math.random().toString(36).slice(2,7), name, done:false, children:[] }, extra);
 }
 
+/* Padrão de fábrica: estado real preenchido pelo Tarik em 17/07/2026.
+   Quem abrir o painel pela primeira vez (sem dados salvos no navegador)
+   começa a partir daqui, em vez de uma árvore zerada de exemplo. */
+const FACTORY_TREE = {
+  "id": "n17_ygly2",
+  "name": "Moacir",
+  "done": false,
+  "children": [
+    {
+      "id": "n9_7vf95",
+      "name": "ASTEC",
+      "done": false,
+      "children": [
+        {
+          "id": "n2_y95k5",
+          "name": "Guilherme (Supervisor)",
+          "done": false,
+          "children": [
+            { "id": "n1_3ncq3", "name": "Plano de carreira", "done": false, "children": [] }
+          ]
+        },
+        { "id": "n3_cnqg8", "name": "Alexandre", "done": false, "children": [] },
+        { "id": "n4_exqs0", "name": "Mateus", "done": false, "children": [] },
+        { "id": "n6_6z8p0", "name": "Jardhel", "done": false, "children": [] },
+        { "id": "n7_nnjui", "name": "Glayson", "done": false, "children": [] },
+        { "id": "n8_5k0ip", "name": "Giubiran", "done": false, "children": [] },
+        { "id": "n1_376ob", "name": "Mauro", "done": false, "children": [] }
+      ],
+      "due": null
+    },
+    {
+      "id": "n10_tzhop",
+      "name": "ADM Palmas",
+      "done": false,
+      "children": [
+        {
+          "id": "n1_98m2b",
+          "name": "Tarik",
+          "done": false,
+          "children": [
+            { "id": "n4_q92dv", "name": "Mapa mental", "done": true, "children": [] },
+            { "id": "n3_lseky", "name": "Orçamento ADM e P.E", "done": false, "children": [] }
+          ]
+        },
+        {
+          "id": "n4_tludm",
+          "name": "Yasmin",
+          "done": false,
+          "children": [
+            { "id": "n5_cqcuv", "name": "V360", "done": false, "children": [] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n11_09qln",
+      "name": "Sementes",
+      "done": false,
+      "children": [
+        { "id": "n2_6umhj", "name": "Nerli", "done": false, "children": [] }
+      ]
+    },
+    {
+      "id": "n12_arlk8",
+      "name": "Fertilizantes",
+      "done": false,
+      "children": [
+        { "id": "n3_4cn01", "name": "Rafael", "done": false, "children": [] }
+      ]
+    },
+    {
+      "id": "n16_4dypm",
+      "name": "Planejamento Estratégico",
+      "done": false,
+      "children": [
+        { "id": "n14_x2q5f", "name": "Diversificação de cultura", "done": false, "children": [] },
+        {
+          "id": "n15_fe238",
+          "name": "Novo modelo ASTEC",
+          "done": false,
+          "children": [
+            { "id": "n1_tq1ju", "name": "Definir modelo", "done": true, "children": [] },
+            { "id": "n2_inkvr", "name": "Apresentar para o Marcelo", "done": true, "children": [] },
+            { "id": "n3_2nl4x", "name": "Apresentar para o Mario", "done": true, "children": [] },
+            { "id": "n4_x4yle", "name": "Validar com o Comitê Agrícola", "done": false, "children": [], "due": null }
+          ]
+        },
+        {
+          "id": "n1_zculz",
+          "name": "Prospecção",
+          "done": false,
+          "children": [
+            { "id": "n2_3m85o", "name": "Marcelo Dengo", "done": false, "children": [] }
+          ]
+        }
+      ]
+    }
+  ]
+};
+const FACTORY_COLLAPSED = ["n11_09qln", "n12_arlk8", "n9_7vf95", "n10_tzhop", "n16_4dypm"];
+
 function defaultTree(){
-  return makeNode("Moacir", { children:[
-    makeNode("ASTEC", { children:[
-      makeNode("Guilherme (sup.)", { children:[ makeNode("Plano de carreira") ] }),
-      makeNode("Alexandre"),
-      makeNode("Mateus"),
-      makeNode("Mauro"),
-      makeNode("Jardhel"),
-      makeNode("Glayson"),
-      makeNode("Giubiran (trainee)"),
-    ]}),
-    makeNode("ADM Palmas"),
-    makeNode("Sementes"),
-    makeNode("Fertilizantes"),
-    makeNode("Planejamento Estratégico", { children:[
-      makeNode("Prospecção"),
-      makeNode("Diversificação de cultura"),
-      makeNode("Novo modelo ASTEC"),
-    ]}),
-  ]});
+  return JSON.parse(JSON.stringify(FACTORY_TREE));
 }
 
 const STORAGE_KEY = "frisia-painel-moacir-v1";
@@ -301,11 +552,76 @@ function leafCount(node){
   return node.children.reduce((s,c)=>s+leafCount(c),0);
 }
 
+/* ============ busca ============ */
+function nodeMatches(node, q){
+  return q && node.name.toLowerCase().includes(q);
+}
+function subtreeHasMatch(node, q){
+  if(!q) return true;
+  if(nodeMatches(node, q)) return true;
+  return (node.children||[]).some(c=>subtreeHasMatch(c, q));
+}
+/* nota: a expansão durante a busca é calculada na hora de desenhar (não mexe no
+   estado real de aberto/fechado), veja isEffectivelyOpen() mais abaixo */
+
+/* ============ prazos ============ */
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+function isOverdue(node){
+  const pct = computePercent(node);
+  return node.due && node.due < todayISO() && pct < 100;
+}
+function formatDate(iso){
+  const [y,m,d] = iso.split("-");
+  return d+"/"+m;
+}
+
+/* ============ histórico semanal ============ */
+const HISTORY_KEY = "frisia-painel-historico-v1";
+function loadHistory(){
+  try{ const raw = localStorage.getItem(HISTORY_KEY); return raw ? JSON.parse(raw) : []; }
+  catch(e){ return []; }
+}
+function saveHistory(hist){
+  try{ localStorage.setItem(HISTORY_KEY, JSON.stringify(hist)); }catch(e){ /* segue sem salvar */ }
+}
+function branchSnapshot(){
+  const branches = {};
+  (tree.children||[]).forEach(c=>{ branches[c.name] = computePercent(c); });
+  return branches;
+}
+function daysBetween(isoA, isoB){
+  return Math.abs((new Date(isoB) - new Date(isoA)) / 86400000);
+}
+function maybeSnapshot(force){
+  const hist = loadHistory();
+  const today = todayISO();
+  const last = hist[hist.length-1];
+  const overall = computePercent(tree);
+  const branches = branchSnapshot();
+  if(last && last.date === today){
+    // já existe um retrato de hoje: atualiza em vez de duplicar
+    last.overall = overall; last.branches = branches;
+    saveHistory(hist);
+    return;
+  }
+  if(force || !last || daysBetween(last.date, today) >= 7){
+    hist.push({date: today, overall, branches});
+    saveHistory(hist);
+  }
+}
+
 /* ============ layout radial ============ */
 const RADIUS_STEPS = [0,180,335,465,575,675];
 function radiusFor(depth){ return depth<RADIUS_STEPS.length ? RADIUS_STEPS[depth] : 675+(depth-5)*100; }
 
-function layoutRadial(root, collapsed){
+/* nó fica "aberto" se: o usuário não o recolheu, OU há uma busca ativa que encontra
+   algo dentro dele (nesse caso abre só visualmente, sem mudar o estado salvo) */
+function isEffectivelyOpen(node, q){
+  if(!collapsed.has(node.id)) return true;
+  return !!(q && subtreeHasMatch(node, q));
+}
+
+function layoutRadial(root, collapsed, q){
   const positions = [];
   const edges = [];
   function recurse(node,startA,endA,depth,parentPos,topColor){
@@ -321,7 +637,7 @@ function layoutRadial(root, collapsed){
       edges.push({x1:parentPos.x, y1:parentPos.y, cx, cy, x2:x, y2:y, color:topColor});
     }
     const hasKids = node.children && node.children.length>0;
-    if(hasKids && !collapsed.has(node.id)){
+    if(hasKids && isEffectivelyOpen(node, q)){
       const total = node.children.reduce((s,c)=>s+leafCount(c),0) || 1;
       let cursor = startA;
       node.children.forEach((child,i)=>{
@@ -336,19 +652,51 @@ function layoutRadial(root, collapsed){
   return {positions, edges};
 }
 
+/* ============ estado de recolhimento (persistido) ============ */
+const COLLAPSE_KEY = "frisia-painel-recolhido-v1";
+function defaultCollapse(node, depth, set){
+  set = set || new Set();
+  const hasKids = node.children && node.children.length>0;
+  if(depth>=1 && hasKids) set.add(node.id);
+  (node.children||[]).forEach(c=>defaultCollapse(c, depth+1, set));
+  return set;
+}
+function loadCollapsed(){
+  try{
+    const raw = localStorage.getItem(COLLAPSE_KEY);
+    if(raw) return new Set(JSON.parse(raw));
+  }catch(e){ /* segue com o padrão */ }
+  return null;
+}
+function saveCollapsed(){
+  try{ localStorage.setItem(COLLAPSE_KEY, JSON.stringify([...collapsed])); }catch(e){ /* segue sem persistir */ }
+}
+
 /* ============ estado de UI ============ */
-let collapsed = new Set();
+let collapsed = loadCollapsed() || new Set(FACTORY_COLLAPSED);
 let selectedId = null;
 let view = "mapa";
-let transform = {x:0, y:0, scale:1};
+let transform = {x:0, y:0, scale:1.7};
+let searchQuery = "";
 
 const svgRoot = document.getElementById("svgRoot");
 const mapaView = document.getElementById("mapaView");
 
 function render(){
   renderHeader();
-  if(view==="mapa"){ renderMapa(); } else { renderLista(); }
+  if(view==="mapa"){ renderMapa(); }
+  else if(view==="lista"){ renderLista(); }
+  else if(view==="resumo"){ renderResumo(); }
+  else { renderAjuda(); }
   saveTree();
+}
+
+function renderAjuda(){
+  document.getElementById("mapaView").style.display = "none";
+  document.getElementById("listaView").style.display = "none";
+  document.getElementById("resumoView").style.display = "none";
+  document.getElementById("ajudaView").style.display = "block";
+  document.getElementById("footerHint").textContent = "Guia rápido de uso e cuidados com os dados";
 }
 
 function renderHeader(){
@@ -362,9 +710,12 @@ function renderHeader(){
 function renderMapa(){
   document.getElementById("mapaView").style.display = "block";
   document.getElementById("listaView").style.display = "none";
+  document.getElementById("resumoView").style.display = "none";
+  document.getElementById("ajudaView").style.display = "none";
   document.getElementById("footerHint").textContent = "Toque num nó · arraste para mover · pinça/scroll para zoom";
 
-  const {positions, edges} = layoutRadial(tree, collapsed);
+  const q = searchQuery.trim().toLowerCase();
+  const {positions, edges} = layoutRadial(tree, collapsed, q);
   let svgHtml = "";
 
   edges.forEach(e=>{
@@ -375,34 +726,68 @@ function renderMapa(){
     const pct = computePercent(p.node);
     const band = bandFor(pct);
     const hasKids = p.node.children && p.node.children.length>0;
-    const r = p.depth===0 ? 42 : Math.max(9, 17 - p.depth*2.5);
-    const fontSize = p.depth===0 ? 16 : Math.max(10.5, 14 - p.depth*1.2);
+    const r = p.depth===0 ? 52 : Math.max(13, 22 - p.depth*2.5);
+    const fontSize = p.depth===0 ? 22 : Math.max(15, 19 - p.depth*1.2);
     const anchor = p.x >= 0 ? "start" : "end";
     const dx = p.x >= 0 ? (r+10) : -(r+10);
 
-    svgHtml += `<g data-id="${p.node.id}" class="nodeGroup">`;
+    const isMatch = q && nodeMatches(p.node, q);
+    const keep = !q || subtreeHasMatch(p.node, q);
+    const groupOpacity = keep ? 1 : 0.18;
+    const ringExtra = isMatch ? `<circle cx="${p.x}" cy="${p.y}" r="${r+5}" fill="none" stroke="#b1c800" stroke-width="3"></circle>` : "";
+
+    svgHtml += `<g data-id="${p.node.id}" data-x="${p.x}" data-y="${p.y}" class="nodeGroup" style="opacity:${groupOpacity}">`;
+    svgHtml += ringExtra;
     svgHtml += `<circle class="node-circle" cx="${p.x}" cy="${p.y}" r="${r}" fill="${p.depth===0?ROOT_COLOR:'#FFFFFF'}" stroke="${band.bar}" stroke-width="${p.depth===0?0:3.5}"></circle>`;
 
     if(p.depth!==0 && !hasKids && p.node.done){
       svgHtml += `<text x="${p.x}" y="${p.y+4}" text-anchor="middle" font-size="${r}" fill="${band.bar}">✓</text>`;
     }
     if(p.depth!==0 && hasKids){
-      svgHtml += `<text x="${p.x}" y="${p.y+fontSize*0.35}" text-anchor="middle" font-size="${fontSize*0.75}" font-weight="700" fill="${band.text}" font-family="'Courier New',monospace">${Math.round(pct)}</text>`;
+      const collapsedMark = !isEffectivelyOpen(p.node, q) ? "+" : "";
+      svgHtml += `<text x="${p.x}" y="${p.y+fontSize*0.35}" text-anchor="middle" font-size="${fontSize*0.75}" font-weight="700" fill="${band.text}" font-family="'Courier New',monospace">${Math.round(pct)}${collapsedMark}</text>`;
+    }
+    if(isOverdue(p.node)){
+      svgHtml += `<text x="${p.x+r*0.7}" y="${p.y-r*0.7}" text-anchor="middle" font-size="${Math.max(12,r*0.9)}" class="overdue-badge">!</text>`;
     }
     if(p.depth===0){
       svgHtml += `<text x="${p.x}" y="${p.y+5}" text-anchor="middle" font-size="${fontSize}" font-weight="700" fill="#fff">${escapeXml(p.node.name)}</text>`;
     } else {
-      svgHtml += `<text class="node-label" x="${p.x+dx}" y="${p.y+4}" text-anchor="${anchor}" font-size="${fontSize}" font-weight="${p.depth===1?700:500}" fill="#1c2b3a" stroke="#F3F6F8" stroke-width="4">${escapeXml(p.node.name)} · ${Math.round(pct)}%</text>`;
+      const dueLabel = p.node.due ? ` · prazo ${formatDate(p.node.due)}` : "";
+      svgHtml += `<text class="node-label" x="${p.x+dx}" y="${p.y+4}" text-anchor="${anchor}" font-size="${fontSize}" font-weight="${p.depth===1?700:500}" fill="${isOverdue(p.node)?'#a63b2e':'#1c2b3a'}" stroke="#F3F6F8" stroke-width="4">${escapeXml(p.node.name)} · ${Math.round(pct)}%${dueLabel}</text>`;
     }
     svgHtml += `</g>`;
   });
 
   svgRoot.innerHTML = svgHtml;
   svgRoot.setAttribute("transform", `translate(${transform.x} ${transform.y}) scale(${transform.scale})`);
+}
 
-  svgRoot.querySelectorAll(".nodeGroup").forEach(g=>{
-    g.addEventListener("click", (e)=>{ openSheet(g.getAttribute("data-id")); });
-  });
+function handleNodeTap(g){
+  if(!g) return;
+  const id = g.getAttribute("data-id");
+  const nx = parseFloat(g.getAttribute("data-x"));
+  const ny = parseFloat(g.getAttribute("data-y"));
+  const node = findNode(tree, id);
+  if(node && node.children && node.children.length>0){
+    if(collapsed.has(id)) collapsed.delete(id); else collapsed.add(id);
+    saveCollapsed();
+    render();
+  }
+  focusNode(nx, ny);
+  openSheet(id);
+}
+
+/* foca e dá zoom suave no nó tocado, sem perder o nível de zoom já escolhido pelo usuário */
+function focusNode(nx, ny){
+  const targetScale = clampScale(Math.max(transform.scale, 3.0));
+  const tx = -targetScale*nx;
+  const ty = -targetScale*ny;
+  svgRoot.style.transition = "transform 0.4s ease";
+  transform = {x:tx, y:ty, scale:targetScale};
+  applyTransform();
+  clearTimeout(focusNode._t);
+  focusNode._t = setTimeout(()=>{ svgRoot.style.transition = ""; }, 420);
 }
 
 function escapeXml(s){
@@ -435,7 +820,28 @@ function openSheet(id){
   }
   document.getElementById("sheetActions").innerHTML = actionsHtml;
 
+  document.getElementById("sheetDueInput").value = node.due || "";
+
+  document.getElementById("sheetRenameInput").value = node.name;
+  document.getElementById("sheetRenameSave").onclick = ()=>{
+    const val = document.getElementById("sheetRenameInput").value.trim();
+    if(val){ node.name = val; render(); openSheet(id); }
+  };
+  document.getElementById("sheetRenameInput").onkeydown = (e)=>{
+    if(e.key==="Enter") document.getElementById("sheetRenameSave").click();
+  };
+
   document.getElementById("sheet").classList.add("open");
+
+  document.getElementById("sheetDueSave").onclick = ()=>{
+    const val = document.getElementById("sheetDueInput").value;
+    node.due = val || null;
+    render(); openSheet(id);
+  };
+  document.getElementById("sheetDueClear").onclick = ()=>{
+    node.due = null;
+    render(); openSheet(id);
+  };
 
   if(!hasKids){
     document.getElementById("actDone").onclick = ()=>{ node.done = !node.done; render(); openSheet(id); };
@@ -443,11 +849,15 @@ function openSheet(id){
   if(hasKids){
     document.getElementById("actCollapse").onclick = ()=>{
       if(collapsed.has(node.id)) collapsed.delete(node.id); else collapsed.add(node.id);
+      saveCollapsed();
       render(); openSheet(id);
     };
   }
   if(!isRoot){
     document.getElementById("actRemove").onclick = ()=>{
+      const hasKidsWarn = node.children && node.children.length>0 ? " e tudo que está dentro dela" : "";
+      const ok = confirm(`Remover "${node.name}"${hasKidsWarn}? Essa ação não pode ser desfeita.`);
+      if(!ok) return;
       const parent = findParent(tree, node.id);
       if(parent){ parent.children = parent.children.filter(c=>c.id!==node.id); }
       closeSheet();
@@ -458,8 +868,16 @@ function openSheet(id){
 function closeSheet(){
   selectedId = null;
   document.getElementById("sheet").classList.remove("open");
+  document.getElementById("sheetExtra").style.display = "none";
+  document.getElementById("sheetMoreToggle").textContent = "Mais opções ▾";
 }
 document.getElementById("sheetClose").addEventListener("click", closeSheet);
+document.getElementById("sheetMoreToggle").addEventListener("click", ()=>{
+  const extra = document.getElementById("sheetExtra");
+  const open = extra.style.display !== "none";
+  extra.style.display = open ? "none" : "block";
+  document.getElementById("sheetMoreToggle").textContent = open ? "Mais opções ▾" : "Menos opções ▴";
+});
 document.getElementById("sheetAddBtn").addEventListener("click", ()=>{
   const input = document.getElementById("sheetAddInput");
   const val = input.value.trim();
@@ -478,16 +896,24 @@ document.getElementById("sheetAddInput").addEventListener("keydown", (e)=>{
 const pointers = new Map();
 let panState = {sx:0, sy:0, tx:0, ty:0, active:false};
 let lastDist = null;
+let tapStart = null; // {el, x, y, t} — usado para detectar toque real vs arrasto/pinça
 
 function startPan(x,y){ panState = {sx:x, sy:y, tx:transform.x, ty:transform.y, active:true}; }
-function clampScale(s){ return Math.min(2.4, Math.max(0.35, s)); }
+function clampScale(s){ return Math.min(3.6, Math.max(0.35, s)); }
 function applyTransform(){ svgRoot.setAttribute("transform", `translate(${transform.x} ${transform.y}) scale(${transform.scale})`); }
 
 mapaView.addEventListener("pointerdown", (e)=>{
+  if(e.target && e.target.closest && e.target.closest("#sheet, .zoom-controls")) return; // deixa os controles funcionarem normalmente
+  e.preventDefault();
+  svgRoot.style.transition = "";
   try{ mapaView.setPointerCapture(e.pointerId); }catch(err){}
   pointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
-  if(pointers.size===1){ startPan(e.clientX, e.clientY); }
-  else if(pointers.size>=2){
+  if(pointers.size===1){
+    startPan(e.clientX, e.clientY);
+    const g = e.target && e.target.closest ? e.target.closest(".nodeGroup") : null;
+    tapStart = {el:g, x:e.clientX, y:e.clientY, t:Date.now()};
+  } else if(pointers.size>=2){
+    tapStart = null; // virou pinça, não é mais candidato a toque
     const pts = [...pointers.values()];
     lastDist = Math.hypot(pts[0].x-pts[1].x, pts[0].y-pts[1].y);
   }
@@ -504,6 +930,7 @@ mapaView.addEventListener("pointermove", (e)=>{
       transform.y = panState.ty + dy;
       applyTransform();
     } else if(pointers.size>=2){
+      tapStart = null;
       const pts = [...pointers.values()];
       const dist = Math.hypot(pts[0].x-pts[1].x, pts[0].y-pts[1].y);
       if(lastDist){
@@ -516,6 +943,15 @@ mapaView.addEventListener("pointermove", (e)=>{
   }catch(err){ /* nunca deixa um gesto quebrar o mapa */ }
 });
 function endPointer(e){
+  if(pointers.size===1 && tapStart && tapStart.el){
+    const dx = e.clientX - tapStart.x;
+    const dy = e.clientY - tapStart.y;
+    const dt = Date.now() - tapStart.t;
+    if(Math.hypot(dx,dy) < 12 && dt < 600){
+      handleNodeTap(tapStart.el);
+    }
+  }
+  tapStart = null;
   pointers.delete(e.pointerId);
   if(pointers.size<2) lastDist=null;
   panState.active = false;
@@ -525,6 +961,7 @@ function endPointer(e){
   }
 }
 mapaView.addEventListener("pointerup", endPointer);
+mapaView.addEventListener("pointercancel", ()=>{ tapStart=null; });
 mapaView.addEventListener("pointercancel", endPointer);
 mapaView.addEventListener("wheel", (e)=>{
   e.preventDefault();
@@ -535,38 +972,73 @@ mapaView.addEventListener("wheel", (e)=>{
 
 document.getElementById("zoomIn").addEventListener("click", ()=>{ transform.scale=clampScale(transform.scale*1.25); applyTransform(); });
 document.getElementById("zoomOut").addEventListener("click", ()=>{ transform.scale=clampScale(transform.scale*0.8); applyTransform(); });
-document.getElementById("zoomReset").addEventListener("click", ()=>{ transform={x:0,y:0,scale:1}; applyTransform(); });
+document.getElementById("zoomReset").addEventListener("click", ()=>{ transform={x:0,y:0,scale:1.7}; applyTransform(); });
 
 /* ============ vista em lista ============ */
 function renderLista(){
   document.getElementById("mapaView").style.display = "none";
   document.getElementById("listaView").style.display = "block";
+  document.getElementById("resumoView").style.display = "none";
+  document.getElementById("ajudaView").style.display = "none";
   document.getElementById("footerHint").textContent = "Toque no quadrado para concluir · use + para sub-vertentes";
-  document.getElementById("listaView").innerHTML = renderListNode(tree, 0, true);
+  const q = searchQuery.trim().toLowerCase();
+  const html = renderListNode(tree, 0, true, q, null);
+  document.getElementById("listaView").innerHTML = html || `<div class="history-empty">Nenhum resultado para essa busca.</div>`;
   bindListEvents();
 }
 
-function renderListNode(node, depth, isRoot){
+function hexToRgba(hex, alpha){
+  const h = hex.replace("#","");
+  const r = parseInt(h.substring(0,2),16);
+  const g = parseInt(h.substring(2,4),16);
+  const b = parseInt(h.substring(4,6),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+function renderListNode(node, depth, isRoot, q, topColor){
+  if(!isRoot && !subtreeHasMatch(node, q)) return "";
   const pct = computePercent(node);
   const band = bandFor(pct);
   const hasKids = node.children && node.children.length>0;
-  const marginLeft = depth===0 ? 0 : 20;
+  const marginLeft = depth===0 ? 0 : (depth===1 ? 0 : 18);
+  const isMatch = q && nodeMatches(node, q);
+  const stripe = "";
+  const nameSize = depth===1 ? 15 : depth===2 ? 14 : 13;
+  const nameWeight = depth<=1 ? 700 : depth===2 ? 600 : 500;
+  const rowBg = depth===1 ? "#fff" : depth>=2 ? "#fff" : undefined;
 
   let html = `<div class="list-node" style="margin-left:${marginLeft}px">`;
-  html += `<div class="list-row ${isRoot?'root':''}">`;
+  html += `<div class="list-row ${isRoot?'root':''}" style="${stripe} ${isMatch?'border-color:#b1c800; border-width:2px;':''}">`;
 
   if(hasKids){
-    html += `<button class="expand-btn open" data-expand="${node.id}">▶</button>`;
+    html += `<button class="expand-btn ${isEffectivelyOpen(node,q)?'open':''}" data-expand="${node.id}">▶</button>`;
   } else {
     html += `<button class="chk ${node.done?'done':''}" data-toggle="${node.id}">${node.done?'✓':''}</button>`;
   }
 
-  html += `<div class="name">${escapeXml(node.name)}</div>`;
+  html += `<div class="name" style="font-size:${nameSize}px; font-weight:${nameWeight}; ${depth>=3?'color:#5C6A78;':''}">${escapeXml(node.name)}`;
+  if(node.due){
+    html += ` <span class="due-tag ${isOverdue(node)?'overdue':'ok'}">· prazo ${formatDate(node.due)}</span>`;
+  }
+  html += `</div>`;
   html += `<div class="pctbar"><div style="width:${pct}%; background:${band.bar}"></div></div>`;
   html += `<div class="pcttext" style="color:${band.text}">${Math.round(pct)}%</div>`;
+  html += `<button class="icon-btn" data-renametoggle="${node.id}" title="Renomear">✏️</button>`;
+  html += `<button class="icon-btn" data-datetoggle="${node.id}" title="Prazo">📅</button>`;
   html += `<button class="icon-btn" data-addtoggle="${node.id}">+</button>`;
   if(!isRoot){ html += `<button class="icon-btn remove" data-remove="${node.id}">✕</button>`; }
   html += `</div>`;
+
+  html += `<div class="date-row" data-renamerow="${node.id}">
+    <input type="text" data-renameinput="${node.id}" value="${escapeXml(node.name)}" style="flex:1;" />
+    <button data-renamesave="${node.id}">Renomear</button>
+  </div>`;
+
+  html += `<div class="date-row" data-daterow="${node.id}">
+    <input type="date" data-dateinput="${node.id}" value="${node.due||''}" />
+    <button data-datesave="${node.id}">Salvar</button>
+    <button class="clear-date" data-dateclear="${node.id}">Remover</button>
+  </div>`;
 
   html += `<div class="add-inline" data-addrow="${node.id}">
     <input type="text" placeholder="Nome da nova vertente..." data-addinput="${node.id}" />
@@ -574,11 +1046,17 @@ function renderListNode(node, depth, isRoot){
   </div>`;
 
   if(hasKids){
-    html += `<div class="children" data-childrenof="${node.id}">`;
-    node.children.forEach(child=>{ html += renderListNode(child, depth+1, false); });
+    html += `<div class="children" data-childrenof="${node.id}" style="display:${isEffectivelyOpen(node,q)?'block':'none'}; ${depth>=0 && topColor ? 'border-left-color:'+topColor+';' : ''}">`;
+    node.children.forEach((child,i)=>{
+      const childColor = depth===0 ? PALETTE[i % PALETTE.length] : topColor;
+      html += renderListNode(child, depth+1, false, q, childColor);
+    });
     html += `</div>`;
   }
   html += `</div>`;
+  if(depth===1){
+    return `<div class="branch-card" style="border-color:${hexToRgba(topColor,0.35)}; background:${hexToRgba(topColor,0.045)};">${html}</div>`;
+  }
   return html;
 }
 
@@ -593,11 +1071,10 @@ function bindListEvents(){
   });
   root.querySelectorAll("[data-expand]").forEach(el=>{
     el.addEventListener("click", ()=>{
-      const childrenDiv = root.querySelector(`[data-childrenof="${el.getAttribute("data-expand")}"]`);
-      if(!childrenDiv) return;
-      const nowHidden = childrenDiv.style.display === "none";
-      childrenDiv.style.display = nowHidden ? "block" : "none";
-      el.classList.toggle("open", nowHidden);
+      const id = el.getAttribute("data-expand");
+      if(collapsed.has(id)) collapsed.delete(id); else collapsed.add(id);
+      saveCollapsed();
+      render();
     });
   });
   root.querySelectorAll("[data-addtoggle]").forEach(el=>{
@@ -623,28 +1100,247 @@ function bindListEvents(){
   root.querySelectorAll("[data-remove]").forEach(el=>{
     el.addEventListener("click", ()=>{
       const id = el.getAttribute("data-remove");
+      const node = findNode(tree, id);
+      if(!node) return;
+      const hasKidsWarn = node.children && node.children.length>0 ? " e tudo que está dentro dela" : "";
+      const ok = confirm(`Remover "${node.name}"${hasKidsWarn}? Essa ação não pode ser desfeita.`);
+      if(!ok) return;
       const parent = findParent(tree, id);
       if(parent){ parent.children = parent.children.filter(c=>c.id!==id); }
       render();
     });
   });
+  root.querySelectorAll("[data-renametoggle]").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      const row = root.querySelector(`[data-renamerow="${el.getAttribute("data-renametoggle")}"]`);
+      row.classList.toggle("open");
+      if(row.classList.contains("open")) row.querySelector("input").focus();
+    });
+  });
+  root.querySelectorAll("[data-renamesave]").forEach(el=>{
+    const id = el.getAttribute("data-renamesave");
+    const submit = ()=>{
+      const input = root.querySelector(`[data-renameinput="${id}"]`);
+      const val = input.value.trim();
+      if(!val) return;
+      const n = findNode(tree, id);
+      n.name = val;
+      render();
+    };
+    el.addEventListener("click", submit);
+    root.querySelector(`[data-renameinput="${id}"]`).addEventListener("keydown", (e)=>{ if(e.key==="Enter") submit(); });
+  });
+  root.querySelectorAll("[data-datetoggle]").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      const row = root.querySelector(`[data-daterow="${el.getAttribute("data-datetoggle")}"]`);
+      row.classList.toggle("open");
+    });
+  });
+  root.querySelectorAll("[data-datesave]").forEach(el=>{
+    const id = el.getAttribute("data-datesave");
+    el.addEventListener("click", ()=>{
+      const input = root.querySelector(`[data-dateinput="${id}"]`);
+      const n = findNode(tree, id);
+      n.due = input.value || null;
+      render();
+    });
+  });
+  root.querySelectorAll("[data-dateclear]").forEach(el=>{
+    const id = el.getAttribute("data-dateclear");
+    el.addEventListener("click", ()=>{
+      const n = findNode(tree, id);
+      n.due = null;
+      render();
+    });
+  });
 }
 
-/* ============ alternância Mapa / Lista ============ */
-document.getElementById("btnMapa").addEventListener("click", ()=>{
-  view="mapa";
+/* ============ vista de resumo ============ */
+function renderResumo(){
+  document.getElementById("mapaView").style.display = "none";
+  document.getElementById("listaView").style.display = "none";
+  document.getElementById("resumoView").style.display = "block";
+  document.getElementById("footerHint").textContent = "Comparativo de vertentes e evolução semanal";
+
+  const overall = computePercent(tree);
+  const rows = [{name:"Geral (Moacir)", pct:overall}].concat(
+    (tree.children||[]).map(c=>({name:c.name, pct:computePercent(c)}))
+  );
+  let barsHtml = "";
+  rows.forEach(r=>{
+    const band = bandFor(r.pct);
+    barsHtml += `<div class="resumo-row">
+      <div class="label" title="${escapeXml(r.name)}">${escapeXml(r.name)}</div>
+      <div class="track"><div style="width:${r.pct}%; background:${band.bar}"></div></div>
+      <div class="pct" style="color:${band.text}">${Math.round(r.pct)}%</div>
+    </div>`;
+  });
+  document.getElementById("resumoBars").innerHTML = barsHtml;
+
+  const hist = loadHistory();
+  if(hist.length===0){
+    document.getElementById("historyList").innerHTML = `<div class="history-empty">Ainda não há retratos salvos. Use o botão acima ou volte em outra semana.</div>`;
+  } else {
+    let h = "";
+    [...hist].reverse().forEach(entry=>{
+      const [y,m,d] = entry.date.split("-");
+      h += `<div class="history-item"><span class="history-date">${d}/${m}/${y}</span><span class="history-pct">${Math.round(entry.overall)}%</span></div>`;
+    });
+    document.getElementById("historyList").innerHTML = h;
+  }
+}
+document.getElementById("snapshotBtn").addEventListener("click", ()=>{
+  maybeSnapshot(true);
+  renderResumo();
+});
+
+/* ============ backup (exportar / importar JSON) ============ */
+function showBackupMsg(text, isError){
+  const el = document.getElementById("backupMsg");
+  el.textContent = text;
+  el.style.color = isError ? "#a63b2e" : "#4a5e00";
+  setTimeout(()=>{ el.textContent = ""; }, 4000);
+}
+document.getElementById("exportBtn").addEventListener("click", ()=>{
+  try{
+    const backup = {
+      versao: 1,
+      exportadoEm: new Date().toISOString(),
+      tree,
+      collapsed: [...collapsed],
+      historico: loadHistory()
+    };
+    const blob = new Blob([JSON.stringify(backup, null, 2)], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `frisia-painel-moacir-backup-${todayISO()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    showBackupMsg("Backup baixado ✓");
+  }catch(e){
+    showBackupMsg("Erro ao gerar o backup.", true);
+  }
+});
+document.getElementById("importBtn").addEventListener("click", ()=>{
+  document.getElementById("importFile").click();
+});
+document.getElementById("importFile").addEventListener("change", (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const data = JSON.parse(reader.result);
+      if(!data.tree || !data.tree.id){ showBackupMsg("Arquivo inválido: não parece um backup deste painel.", true); return; }
+      const ok = confirm("Isso vai substituir os dados atuais deste navegador pelos do backup. Continuar?");
+      if(!ok) return;
+      tree = data.tree;
+      collapsed = new Set(data.collapsed || []);
+      saveHistory(data.historico || []);
+      saveTree();
+      saveCollapsed();
+      render();
+      showBackupMsg("Backup restaurado ✓");
+    }catch(err){
+      showBackupMsg("Não consegui ler esse arquivo — confira se é o JSON exportado daqui.", true);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = "";
+});
+
+/* ============ busca ============ */
+function flattenNodes(node, ancestors, out){
+  out.push({id:node.id, name:node.name, path:ancestors});
+  (node.children||[]).forEach(c=>flattenNodes(c, node===tree ? [] : [...ancestors, node.name], out));
+  return out;
+}
+function renderSearchResults(){
+  const q = searchQuery.trim().toLowerCase();
+  const box = document.getElementById("searchResults");
+  if(!q){ box.classList.remove("open"); box.innerHTML=""; return; }
+  const all = flattenNodes(tree, [], []);
+  const matches = all.filter(n=> n.id!==tree.id && n.name.toLowerCase().includes(q)).slice(0,8);
+  if(matches.length===0){ box.classList.remove("open"); box.innerHTML=""; return; }
+  box.innerHTML = matches.map(m=>{
+    const crumb = m.path.length ? `<span class="search-result-path"> — ${escapeXml(m.path.join(" › "))}</span>` : "";
+    return `<div class="search-result-item" data-jump="${m.id}"><strong>${escapeXml(m.name)}</strong>${crumb}</div>`;
+  }).join("");
+  box.classList.add("open");
+  box.querySelectorAll("[data-jump]").forEach(el=>{
+    el.addEventListener("click", ()=> jumpToNode(el.getAttribute("data-jump")));
+  });
+}
+function jumpToNode(id){
+  // expande de verdade (e persiste) todos os ancestrais do nó escolhido
+  let current = id;
+  let parent = findParent(tree, current);
+  while(parent){
+    collapsed.delete(parent.id);
+    current = parent.id;
+    parent = findParent(tree, current);
+  }
+  saveCollapsed();
+
+  searchQuery = "";
+  document.getElementById("searchInput").value = "";
+  document.getElementById("searchResults").classList.remove("open");
+
+  view = "mapa";
   document.getElementById("btnMapa").classList.add("active");
   document.getElementById("btnLista").classList.remove("active");
+  document.getElementById("btnResumo").classList.remove("active");
+  document.getElementById("btnAjuda").classList.remove("active");
+  render();
+
+  const g = svgRoot.querySelector(`[data-id="${id}"]`);
+  if(g){
+    const nx = parseFloat(g.getAttribute("data-x"));
+    const ny = parseFloat(g.getAttribute("data-y"));
+    focusNode(nx, ny);
+  }
+  openSheet(id);
+}
+document.getElementById("searchInput").addEventListener("input", (e)=>{
+  searchQuery = e.target.value;
+  renderSearchResults();
   render();
 });
-document.getElementById("btnLista").addEventListener("click", ()=>{
-  view="lista";
-  document.getElementById("btnLista").classList.add("active");
-  document.getElementById("btnMapa").classList.remove("active");
+document.getElementById("searchInput").addEventListener("keydown", (e)=>{
+  if(e.key!=="Enter") return;
+  const first = document.querySelector("#searchResults .search-result-item[data-jump]");
+  if(first) jumpToNode(first.getAttribute("data-jump"));
+});
+document.getElementById("searchInput").addEventListener("blur", ()=>{
+  setTimeout(()=>{ document.getElementById("searchResults").classList.remove("open"); }, 150);
+});
+document.getElementById("searchInput").addEventListener("focus", ()=>{
+  if(searchQuery.trim()) renderSearchResults();
+});
+document.getElementById("searchClear").addEventListener("click", ()=>{
+  searchQuery = "";
+  document.getElementById("searchInput").value = "";
+  document.getElementById("searchResults").classList.remove("open");
   render();
+});
+
+/* ============ alternância Mapa / Lista / Resumo / Ajuda ============ */
+const viewButtons = { mapa:"btnMapa", lista:"btnLista", resumo:"btnResumo", ajuda:"btnAjuda" };
+Object.keys(viewButtons).forEach(key=>{
+  document.getElementById(viewButtons[key]).addEventListener("click", ()=>{
+    view = key;
+    Object.values(viewButtons).forEach(btnId=>{
+      document.getElementById(btnId).classList.toggle("active", btnId===viewButtons[key]);
+    });
+    render();
+  });
 });
 
 /* ============ inicialização ============ */
+maybeSnapshot(false);
 render();
 </script>
 </body>
